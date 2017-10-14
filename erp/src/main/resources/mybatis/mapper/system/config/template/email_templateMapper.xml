@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EmailTemplate">
+	<resultMap id="BaseResultMap" type="com.singsong.erp.business.system.config.template.entity.EmailTemplate">
+		<id column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="create_d" property="createD" jdbcType="TIMESTAMP" />
+		<result column="update_d" property="updateD" jdbcType="TIMESTAMP" />
+		<result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+		<result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+		<result column="from_email" property="from" jdbcType="VARCHAR" />
+		<result column="to_email" property="to" jdbcType="VARCHAR" />
+		<result column="cc_email" property="cc" jdbcType="VARCHAR" />
+		<result column="bcc_email" property="bcc" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="subject" property="subject" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="replace_text" property="replaceText" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+  <select id="findByPk" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from email_template
+    where  id = #{id,jdbcType=VARCHAR} and delete_flag=0
+  </select>
+  <select id="findByPkBatch" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from email_template
+    where  delete_flag=0 and id in
+	<foreach item="item" index="index" collection="list" open="("
+		separator="," close=")">
+		#{item}
+	</foreach>    
+  </select>  
+  <select id="findByUnique" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from email_template
+    where  type = #{type,jdbcType=VARCHAR} and delete_flag=0
+  </select>  
+  <insert id="save" parameterType="com.singsong.erp.business.system.config.template.entity.EmailTemplate" >
+    insert into email_template (id, create_d, update_d, delete_flag, 
+      from_email, to_email, cc_email,bcc_email, title,subject,content,replace_text,type)
+    values (
+      newId(),#{createD,jdbcType=TIMESTAMP},#{updateD,jdbcType=TIMESTAMP},#{deleteFlag,jdbcType=INTEGER},
+      #{from,jdbcType=INTEGER}, #{to,jdbcType=VARCHAR}, 
+      #{cc,jdbcType=VARCHAR}, #{bcc,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{subject,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{replaceText,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="update" parameterType="com.singsong.erp.business.system.config.template.entity.EmailTemplate" >
+    update email_template
+    <set >
+      <if test="updateD != null" >
+        update_d = #{updateD,jdbcType=TIMESTAMP},
+      </if>
+      <if test="from != null" >
+        from_email = #{from,jdbcType=VARCHAR},
+      </if>
+      <if test="to != null" >
+        to_email = #{to,jdbcType=VARCHAR},
+      </if>
+      <if test="cc != null" >
+        cc_email = #{cc,jdbcType=VARCHAR},
+      </if>
+      <if test="bcc != null" >
+        bcc_email = #{bcc,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null" >
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="replaceText != null" >
+        replace_text = #{replaceText,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>         
+    </set>
+    where id = #{id,jdbcType=VARCHAR} and delete_flag=0
+  </update>  
+  <update id="deleteByPk" parameterType="java.util.Map" >
+    update  email_template
+    set delete_flag = 1,update_d = #{updateD,jdbcType=TIMESTAMP}
+    where delete_flag=0 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="deleteByPkBatch" parameterType="java.util.Map" >
+	update email_template
+	set delete_flag = 1,update_d = #{updateD,jdbcType=TIMESTAMP}
+	where delete_flag=0 and id in
+	<foreach item="item" index="index" collection="ids" open="("
+		separator="," close=")">
+		#{item}
+	</foreach>
+  </update>  
+	<select id="findPageList" resultMap="BaseResultMap" parameterType="com.singsong.erp.base.pagin.Paginator">
+		select top ${pageSize}
+		*
+		from 
+		( 
+			select row_number() over 
+				( 
+				  <choose>
+			        <when test ="sorts != null and sorts !=''">
+			            <![CDATA[ ${sorts} ]]>
+			        </when>
+			        <otherwise>
+			            order by id desc
+			        </otherwise>
+				  </choose>				
+				) as rownumber,
+			*
+			from email_template where delete_flag=0
+			<if test ="filters != null and filters !=''">
+				<![CDATA[ ${filters} ]]> 
+			</if>
+		) t
+		where rownumber > #{start}	
+	</select> 
+	<select id="findPageCount" resultType="java.lang.Integer" parameterType="com.singsong.erp.base.pagin.Paginator">
+		select
+		count(1)
+		from email_template t
+		where t.delete_flag = 0
+		<if test="filters != null and filters !=''">
+			 <![CDATA[${filters}]]>
+		</if>
+	</select>
+</mapper>

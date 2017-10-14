@@ -1,0 +1,27 @@
+[
+  {
+    "value": 1,
+    "text": "初始",
+    "selected":true
+  },
+  {
+    "value": 2,
+    "text": "计划"
+  },
+  {
+    "value": 3,
+    "text": "开始"
+  },
+  {
+    "value": 4,
+    "text": "完成"
+  },
+  {
+    "value": 5,
+    "text": "作废"
+  },
+  {
+    "value": 6,
+    "text": "取消"
+  }
+]

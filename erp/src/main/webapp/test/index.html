@@ -1,0 +1,97 @@
+<html>
+<head>
+<script type="text/javascript">
+	var Ajax={
+		    get: function(url, fn) {
+		        var obj = new XMLHttpRequest();  // XMLHttpRequest对象用于在后台与服务器交换数据          
+		        obj.open('GET', url, true);
+		        obj.onreadystatechange = function() {
+		            if (obj.readyState == 4 && obj.status == 200 || obj.status == 304) { // readyState == 4说明请求已完成
+		                fn.call(this, obj.responseText);  //从服务器获得数据
+		            }
+		        };
+		        obj.send();
+		    },
+		    post: function (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+		        var obj = new XMLHttpRequest();
+		        obj.open("POST", url, true);
+		        obj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  // 添加http头，发送信息至服务器时内容编码类型
+		        obj.onreadystatechange = function() {
+		            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {  // 304未修改
+		                fn.call(this, obj.responseText);
+		            }
+		        };
+		        obj.send(data);
+		    }
+	}
+	function ajaxTest() {
+/* 		Ajax.post("http://139.196.124.76:18080/erp/api/report/export",null,function(data){
+			console.log(data);
+			alert(data);
+		}); */
+/* 		Ajax.post("http://localhost:8080/erp/api/report/testJson",null,function(data){
+			console.log(data);
+			alert(data);
+		}); */		
+/* 		Ajax.post("ttp://139.196.124.76:18080/erp/api/report/testJson",null,function(data){
+			console.log(data);
+			alert(data);
+		});	 */	
+
+/* 	jsonp({
+			url : "http://139.196.124.76:18080/erp/api/report/testJson",
+			key : 'jsoncallback',
+			data :null,
+			callback : function(data) {
+				console.log(data);
+			}
+		}); */
+	//window.open("http://139.196.124.76:18080/erp/api/report/export");	
+	jsonp2({
+		url : "http://139.196.124.76:18080/erp/api/report/testJson",
+		data : null,
+		callback : function(data) {
+			alert(data.result);
+		}
+	});
+/* 	jsonpOne("http://139.196.124.76:18080/erp/api/report/testJson",{  
+        data:null,  
+        callback:function(data){
+        	console.log(data);
+        	alert(data);
+        },  
+        error:function(){
+        	alert(data);
+        },  
+        timeout:10000  
+    });	 */
+	
+}	
+	function jsonp2(setting) {
+		setting.data = setting.data || {};
+		setting.key = setting.key || 'callback';
+		setting.callback = setting.callback || function() {
+		}
+		setting.data[setting.key] = '__onGetData__'
+		window.__onGetData__ = function(data) {
+			setting.callback(data);
+		}
+		var script = document.createElement('script');
+		var query = [];
+		for ( var key in setting.data) {
+			query.push(key + '=' + encodeURIComponent(setting.data[key]));
+		}
+		script.src = setting.url + '?' + query.join('&');
+		document.getElementsByTagName('head')[0].appendChild(script);
+		document.getElementsByTagName('head')[0].removeChild(script);
+/* 		document.head.appendChild(script);
+		document.head.removeChild(script); */
+	}
+</script>
+</head>
+<body>
+	<div>
+		<input type="button" onclick="ajaxTest()" value="测试">
+	</div>
+</body>
+</html>

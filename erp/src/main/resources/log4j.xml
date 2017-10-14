@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
+		<!-- 默认情况下是：System.out,指定输出控制台,不写也行 -->
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS\} %-5p [%t] {%c:%L} - %m%n" />
+		</layout>
+	</appender>
+	<appender name="RollingFile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/home/ysaln/logs/application/erp/root.log" />
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="append" value="true" />
+		<param name="encoding" value="utf-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyy-MM-dd HH:mm:ss,SSS\} %-5p [%t] {%c:%L} - %m%n" />
+		</layout>
+	</appender>
+	<appender name="GelftGraylog2" class="org.graylog2.log.GelfAppender">
+		<param name="graylogHost" value="10.100.16.206" />
+		<param name="graylogPort" value="12203" />
+		<param name="extractStacktrace" value="true" />
+		<param name="addExtendedInformation" value="true" />
+		<param name="includeLocation" value="true" />
+		<param name="facility" value="gelf-java" />
+		<param name="additionalFields" value="{'application': 'hfbi'}" />
+	</appender>
+	<!-- 指定logger的设置，additivity指示是否遵循缺省的继承机制,不继续则输出级别根据当前的来配置,这样就可以对其他包产生的日志级别定义为error，对特殊的包下面的类定义为info级别 
+		在生产环境中将这个日志打开 -->
+	<logger name="com.singsong.erp" additivity="false">
+		<level value="info" />
+		<!-- <appender-ref ref="GelftGraylog2" /> -->
+		<appender-ref ref="RollingFile" />
+		<appender-ref ref="Console" />
+	</logger>
+	<root>
+		<!-- 在生产环境中这个要一般设置为error -->
+		<priority value="info" />
+		<!-- <appender-ref ref="GelftGraylog2" /> -->
+		<appender-ref ref="RollingFile" />
+		<appender-ref ref="Console" />
+	</root>
+</log4j:configuration>

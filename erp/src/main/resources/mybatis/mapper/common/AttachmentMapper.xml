@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Attachment">
+	<resultMap id="BaseResultMap" type="com.singsong.erp.business.common.entity.Attachment">
+		<id column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+		<result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+		<result column="modifier_id" property="modifierId" jdbcType="VARCHAR" />
+		<result column="delete_flag" property="deleteFlag" jdbcType="TINYINT" />
+		
+		<result column="file_type" property="fileType" jdbcType="VARCHAR" />
+		<result column="business_type" property="businessType" jdbcType="VARCHAR" />
+		<result column="business_id" property="businessId" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="description" property="desc" jdbcType="VARCHAR" />
+	</resultMap>
+  <select id="findByPk" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from common_attach
+    where  id = #{id,jdbcType=VARCHAR} and delete_flag=0
+  </select>
+  <select id="findByPkBatch" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from common_attach
+    where  delete_flag=0 and id in
+	<foreach item="item" index="index" collection="list" open="("
+		separator="," close=")">
+		#{item}
+	</foreach>    
+  </select>  
+  <select id="findByBusinessId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from common_attach
+    where  delete_flag=0 and business_id=#{businessId,jdbcType=VARCHAR}
+  </select>  
+  <insert id="save" parameterType="com.singsong.erp.business.common.entity.Attachment" >
+    insert into common_attach (id, create_date, update_date,creater_id,modifier_id, delete_flag, 
+      file_type, business_type, business_id,path,short_name,real_name,description)
+    values (
+      newId(),#{createDate,jdbcType=TIMESTAMP},#{updateDate,jdbcType=TIMESTAMP},#{createrId,jdbcType=VARCHAR},
+      #{modifierId,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=TINYINT},
+      #{fileType,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR}, 
+      #{path,jdbcType=VARCHAR},#{shortName,jdbcType=VARCHAR},#{realName,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="deleteByBusinessId" parameterType="java.util.Map" >
+    update  common_attach
+    set delete_flag = 1,update_date = #{updateDate,jdbcType=TIMESTAMP},modifier_id = #{userId,jdbcType=TIMESTAMP}
+    where delete_flag=0 and business_id = #{businessId,jdbcType=VARCHAR}
+  </update>  
+  <update id="deleteByPk" parameterType="java.util.Map" >
+    update  common_attach
+    set delete_flag = 1,update_date = #{updateDate,jdbcType=TIMESTAMP},modifier_id = #{userId,jdbcType=TIMESTAMP}
+    where delete_flag=0 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="deleteByPkBatch" parameterType="java.util.Map" >
+	update common_attach
+	set delete_flag = 1,update_date = #{updateDate,jdbcType=TIMESTAMP},modifier_id = #{userId,jdbcType=TIMESTAMP}
+	where delete_flag=0 and id in
+	<foreach item="item" index="index" collection="ids" open="("
+		separator="," close=")">
+		#{item}
+	</foreach>
+  </update>  
+	<select id="findPageList" resultMap="BaseResultMap" parameterType="com.singsong.erp.base.pagin.Paginator">
+		select top ${pageSize}
+		*
+		from 
+		( 
+			select row_number() over 
+				( 
+				  <choose>
+			        <when test ="sorts != null and sorts !=''">
+			            <![CDATA[ ${sorts} ]]>
+			        </when>
+			        <otherwise>
+			            order by create_date desc
+			        </otherwise>
+				  </choose>				
+				) as rownumber,
+			*
+			from common_attach where delete_flag=0
+			<if test ="filters != null and filters !=''">
+				<![CDATA[ ${filters} ]]> 
+			</if>
+		) t
+		where rownumber > #{start}	
+	</select> 
+	<select id="findPageCount" resultType="java.lang.Integer" parameterType="com.singsong.erp.base.pagin.Paginator">
+		select
+		count(1)
+		from common_attach t
+		where t.delete_flag = 0
+		<if test="filters != null and filters !=''">
+			 <![CDATA[${filters}]]>
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,158 @@
+<html>
+<head>
+<script type="text/javascript"></script>
+<link href="/erp/frame/jquery-easyui-1.5.3/themes/default/easyui.css" rel="stylesheet" />
+<link href="/erp/frame/jquery-easyui-1.5.3/themes/icon.css" rel="stylesheet" />
+<link href="/erp/home/css/icon.css" rel="stylesheet" />
+<link rel="stylesheet">
+	a{
+text-decoration:none;
+}
+</link>
+<script src="/erp/frame/jquery-easyui-1.5.3/jquery.min.js"></script>
+<script src="/erp/frame/jquery-easyui-1.5.3/jquery.easyui.min.js"></script>
+<script src="/erp/frame/jquery-easyui-1.5.3/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',border:false" style="height:60px;background:#B3DFDA;padding:10px">
+		<div class="header-left" style="position: absolute; z-index: 1; left: 15px; top: 0;">
+			<img alt="" height="60px;" width="356px;" src="/erp/home/logo.png">
+		</div>
+		<div class="header-right" style="position: absolute; z-index: 1; right: 5px; top: 0; color: #fff; text-align: right;">
+			<p>
+				<strong class="easyui-tooltip" title="2条未读消息">admin</strong>，欢迎您！
+			</p>
+			<p>
+				<a href="#">网站首页</a>|<a href="#">支持论坛</a>|<a href="#">帮助中心</a>|<a
+					href="#">安全退出</a>
+			</p>
+		</div>
+	</div>
+	<div data-options="region:'west',split:true,title:'导航菜单'" style="width:200px;padding:10px;">
+		<div class="easyui-accordion" data-options="fit:true,border:false">
+ 		<div title="供应链管理" data-options="selected:true,iconCls:'icon-application-cascade'" style="padding:5px;">
+                    <ul class="tree easyui-tree easyui-tree-menu" data-options="animate:true,lines:true">
+                        <li>
+                            <span>工厂管理</span>
+                            <ul>
+                                <li data-options="iconCls:'icon-chart-organisation'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">工厂信息</a></span>
+                                </li>
+                                <li data-options="iconCls:'icon-users'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">工厂价格</a></span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span>船务管理</span>
+                            <ul>
+                                <li data-options="iconCls:'icon-user-group'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">出口报关</a></span>
+                                </li>
+                                <li data-options="iconCls:'icon-cog'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">海外清关</a></span>
+                                </li>                                  
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="tree easyui-tree easyui-tree-menu" data-options="animate:true,lines:true">
+                        <li>
+                            <span>工厂管理</span>
+                            <ul>
+                                <li data-options="iconCls:'icon-chart-organisation'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">工厂信息</a></span>
+                                </li>
+                                <li data-options="iconCls:'icon-users'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">工厂价格</a></span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span>船务管理</span>
+                            <ul>
+                                <li data-options="iconCls:'icon-user-group'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">出口报关</a></span>
+                                </li>
+                                <li data-options="iconCls:'icon-cog'">
+                                    <span><a href="javascript:void(0)" data-icon="icon-users" data-link="temp/layout-3.html">海外清关</a></span>
+                                </li>                                
+                            </ul>
+                        </li>
+                    </ul>                    
+            </div>
+			<div title="Title2" data-options="" style="padding: 10px;">content2</div>
+			<div title="Title3" style="padding: 10px">content3</div>
+		</div>
+	</div>
+	<!-- <div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region</div> -->
+	<div data-options="region:'south',border:false"	style="height: 50px; padding: 10px;">
+		<div  data-options="region:'south',border:true,split:true" align="center">
+			Copyright © 2014-2017 Singsong (Shanghai) Gift Enterprise Co.,LTD
+		</div>
+	</div>
+	<div class="center-main" data-options="region:'center'">
+		<div id="center-main-tabs" class="easyui-tabs" data-options="border:false,fit:true">
+			<div title="首页" data-options="closable:false,iconCls:'icon-tip',cls:'pd3'" id="adbc">
+				三松ERP系统欢迎你a
+			</div>
+		</div>
+	</div>
+    <script type="text/javascript">
+		$('.easyui-tree-menu a').on("click",function(){
+			var title = $(this).text();
+			var url = $(this).attr('data-link');
+			var iconCls = $(this).attr('data-icon');
+			var iframe = $(this).attr('iframe')==1?true:false;
+			addTab(title,url,iconCls,iframe);
+		});
+		/**
+		* Name 添加菜单选项
+		* Param title 名称
+		* Param href 链接
+		* Param iconCls 图标样式
+		* Param iframe 链接跳转方式（true为iframe，false为href）
+		*/	
+		function addTab(title, href, iconCls, iframe){
+			var tabPanel = $('#center-main-tabs');
+			if(!tabPanel.tabs('exists',title)){
+				var content = '<iframe scrolling="auto" frameborder="0"  src="'+ href +'" style="width:100%;height:100%;"></iframe>';
+				if(iframe){
+					tabPanel.tabs('add',{
+						title:title,
+						content:content,
+						iconCls:iconCls,
+						fit:true,
+						cls:'pd3',
+						closable:true
+					});
+				}
+				else{
+					tabPanel.tabs('add',{
+						title:title,
+						href:href,
+						iconCls:iconCls,
+						fit:true,
+						cls:'pd3',
+						closable:true
+					});
+				}
+			}
+			else
+			{
+				tabPanel.tabs('select',title);
+			}
+		}
+		/**
+		* Name 移除菜单选项
+		*/
+		function removeTab(){
+			var tabPanel = $('#center-main-tabs');
+			var tab = tabPanel.tabs('getSelected');
+			if (tab){
+				var index = tabPanel.tabs('getTabIndex', tab);
+				tabPanel.tabs('close', index);
+			}
+		}
+	</script>	
+</body>
+</html>
